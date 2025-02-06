@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Зимний сайт</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            overflow: hidden;
+            color: white;
+            position: relative;
+            background: linear-gradient(180deg, #0a2e38, #1c4a5a);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0px 4px 15px rgba(255, 111, 97, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        button:hover {
+            background-color: #ff4a3d;
+            transform: scale(1.1);
+            box-shadow: 0px 6px 20px rgba(255, 111, 97, 0.6);
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Снежинки */
+        .snowflake {
+            position: absolute;
+            top: -10%;
+            color: #fff;
+            font-size: 20px;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        /* Снег на земле */
+        .snow-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
+            z-index: -1;
+            box-shadow: 0px -10px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Зимние горы */
+        .mountains {
+            position: absolute;
+            bottom: 150px;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(180deg, #2c3e50, #34495e);
+            clip-path: polygon(0% 100%, 100% 100%, 100% 50%, 75% 30%, 50% 50%, 25% 30%, 0% 50%);
+            z-index: -2;
+        }
+
+        /* Скример */
+        #scare {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background: black;
+        }
+        #scare video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; /* Отключаем управление видео */
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+            .snowflake {
+                font-size: 16px;
+            }
+        }
+
+        /* Блокировка ориентации */
+        @media screen and (orientation: landscape) {
+            body {
+                transform: rotate(0deg);
+                transform-origin: left top;
+                width: 100vh;
+                height: 100vw;
+                overflow-x: hidden;
+                position: absolute;
+                top: 100%;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Добро пожаловать в зимнюю сказку!</h1>
+    <p>Нажми на кнопку ниже, чтобы увидеть что-то невероятное...</p>
+    <button onclick="showScare()">Нажимай!</button>
+
+    <!-- Снег на земле -->
+    <div class="snow-ground"></div>
+
+    <!-- Зимние горы -->
+    <div class="mountains"></div>
+
+    <!-- Снежинки -->
+    <div id="snowflakes"></div>
+
+    <!-- Скример -->
+    <div id="scare">
+        <video id="scare-video" autoplay muted loop controlsList="nodownload nofullscreen noremoteplayback" disablePictureInPicture>
+            <source src="media/scary-video.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+    </div>
+
+    <script>
+        // Генерация снежинок
+        function createSnowflakes() {
+            const snowflakesContainer = document.getElementById('snowflakes');
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                snowflakesContainer.appendChild(snowflake);
+            }
+        }
+
+        // Показ скримера
+        function showScare() {
+            const scareDiv = document.getElementById('scare');
+            const scareVideo = document.getElementById('scare-video');
+
+            // Показываем видео
+            scareDiv.style.display = 'block';
+
+            // Включаем звук и воспроизводим видео
+            scareVideo.muted = false;
+            scareVideo.play();
+
+            // Блокируем управление видео
+            scareVideo.controls = false;
+            scareVideo.disablePictureInPicture = true;
+
+            // Блокируем выход из полноэкранного режима
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    scareVideo.requestFullscreen();
+                }
+            });
+
+            // Переход в полноэкранный режим
+            if (scareVideo.requestFullscreen) {
+                scareVideo.requestFullscreen();
+            } else if (scareVideo.mozRequestFullScreen) { // Firefox
+                scareVideo.mozRequestFullScreen();
+            } else if (scareVideo.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                scareVideo.webkitRequestFullscreen();
+            } else if (scareVideo.msRequestFullscreen) { // IE/Edge
+                scareVideo.msRequestFullscreen();
+            }
+
+            // Блокировка ориентации экрана
+            screen.orientation.lock('portrait').catch(() => {
+                console.log('Блокировка ориентации не поддерживается');
+            });
+        }
+
+        // Создаем снежинки при загрузке страницы
+        createSnowflakes();
+    </script>
+</body>
+</html>
